@@ -35,7 +35,10 @@ interface KeyboardHandler {
                 KeyboardKeys.DECIMAL -> decimalKeyPress(key)
                 KeyboardKeys.DONE -> onDoneClick.invoke()
                 KeyboardKeys.DELETE -> deleteKeyPress()
-                KeyboardKeys.PLUS, KeyboardKeys.MINUS, KeyboardKeys.MULTIPLICATION, KeyboardKeys.DIVISION -> operationKeyPress(key)
+                KeyboardKeys.PLUS, KeyboardKeys.MINUS, KeyboardKeys.MULTIPLICATION, KeyboardKeys.DIVISION -> operationKeyPress(
+                    key
+                )
+
                 else -> otherKeysPress(key)
             }
             return updatedValue
@@ -44,10 +47,8 @@ interface KeyboardHandler {
         override fun deleteKeyPress() {
             if (updatedValue.isNotEmpty()) {
                 if (updatedValue == KeyboardKeys.ZERO.label) return
-                if (updatedValue.length == 1) {
-                    updatedValue = KeyboardKeys.ZERO.label
-                }
-                updatedValue = updatedValue.dropLast(1)
+                updatedValue = if (updatedValue.length == 1) KeyboardKeys.ZERO.label
+                else updatedValue.dropLast(1)
             }
         }
 

@@ -31,7 +31,12 @@ kotlin {
     }
     
     sourceSets {
-        
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+            implementation(libs.junit)
+        }
+
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
