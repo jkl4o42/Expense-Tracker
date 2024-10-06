@@ -24,54 +24,56 @@ import androidx.navigation.compose.rememberNavController
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.jkl4o4.expense.tracker.navigation.presentation.NavigationHost
 import org.jkl4o4.expense.tracker.navigation.presentation.Screen
+import org.jkl4o4.expense.tracker.new.di.transactionModule
+import org.koin.compose.KoinApplication
 
 @Composable
 @Preview
 fun App() {
-    MaterialTheme {
+    KoinApplication(application = {
+        modules(transactionModule)
+    }) {
+        MaterialTheme {
 
-        var selectedItem by remember { mutableStateOf(0) }
-        val navController = rememberNavController()
-        val items = listOf(
-            MenuItem(name = "Home", icon = Icons.Filled.Home, screen = Screen.Home),
-            MenuItem(name = "New", icon = Icons.Filled.Add, screen = Screen.New),
-            MenuItem(
-                name = "History",
-                icon = Icons.AutoMirrored.Filled.List,
-                screen = Screen.History
+            var selectedItem by remember { mutableStateOf(0) }
+            val navController = rememberNavController()
+            val items = listOf(
+                MenuItem("Home", Icons.Filled.Home, Screen.Home),
+                MenuItem("New", Icons.Filled.Add, Screen.New),
+                MenuItem("History", Icons.AutoMirrored.Filled.List, Screen.History)
             )
-        )
 
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                BottomNavigation(
-                    backgroundColor = Color.Black,
-                    windowInsets = BottomNavigationDefaults.windowInsets,
-                ) {
-                    items.forEachIndexed { index, item ->
+            Scaffold(
+                modifier = Modifier.fillMaxSize(),
+                bottomBar = {
+                    BottomNavigation(
+                        backgroundColor = Color.Black,
+                        windowInsets = BottomNavigationDefaults.windowInsets,
+                    ) {
+                        items.forEachIndexed { index, item ->
 
-                        val color = if(selectedItem == index) Color.White else Color.Gray
+                            val color = if (selectedItem == index) Color.White else Color.Gray
 
-                        BottomNavigationItem(
-                            icon = { Icon(item.icon, tint = color, contentDescription = null) },
-                            label = { Text(item.name, color = color) },
-                            selected = selectedItem == index,
-                            onClick = {
-                                selectedItem = index
-                                navController.navigate(item.screen)
-                            }
-                        )
+                            BottomNavigationItem(
+                                icon = { Icon(item.icon, tint = color, contentDescription = null) },
+                                label = { Text(item.name, color = color) },
+                                selected = selectedItem == index,
+                                onClick = {
+                                    selectedItem = index
+                                    navController.navigate(item.screen)
+                                }
+                            )
+                        }
                     }
                 }
+            ) { innerPadding ->
+                NavigationHost(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(innerPadding),
+                    navController = navController
+                )
             }
-        ) { innerPadding ->
-            NavigationHost(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding),
-                navController = navController
-            )
         }
     }
 }
